@@ -1,0 +1,22 @@
+from minisom import MiniSom
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.RandomState(10)
+N_points = 20
+N_neurons = N_points*2
+x = np.random.rand(N_points)
+y = np.random.rand(N_points)
+som = MiniSom(1, N_neurons, 2, sigma = 3, neighborhood_function = "triangle")
+points = np.array([x, y]).T
+som.pca_weights_init(points)
+som.train_batch(points, 1000)
+plt.scatter(x, y)
+
+visit_order = np.argsort([som.winner(p)[1] for p in points])
+plt.plot(points[visit_order][:,0], points[visit_order][:,1])
+
+for i, p in enumerate(points[visit_order]):
+    plt.text(p[0]+.01, p[1]+.01, str(i+1))
+
+plt.show()
